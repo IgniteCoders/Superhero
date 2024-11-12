@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         adapter = SuperheroAdapter(superheroList)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+
+        searchSuperheroes("")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,7 +65,11 @@ class MainActivity : AppCompatActivity() {
                 val result = service.findSuperheroesByName(query)
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    adapter.updateItems(result.results)
+                    if (result.response == "success") {
+                        adapter.updateItems(result.results)
+                    } else {
+                        // TODO: Mostrar mensaje de que no se ha encontrado nada
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("API", e.stackTraceToString())
