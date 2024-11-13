@@ -1,5 +1,6 @@
 package com.example.superhero.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -40,11 +41,20 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        adapter = SuperheroAdapter(superheroList)
+        adapter = SuperheroAdapter(superheroList) { position ->
+            val superhero = superheroList[position]
+            navigateToDetail(superhero)
+        }
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         searchSuperheroes("a")
+    }
+
+    private fun navigateToDetail(superhero: Superhero) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("SUPERHERO_ID", superhero.id)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -76,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
                 CoroutineScope(Dispatchers.Main).launch {
                     if (result.response == "success") {
-                        adapter.updateItems(result.results)
+                        superheroList = result.results
+                        adapter.updateItems(superheroList)
                     } else {
                         // TODO: Mostrar mensaje de que no se ha encontrado nada
                     }
