@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToDetail(superhero: Superhero) {
         val intent = Intent(this, DetailActivity::class.java)
-        intent.putExtra("SUPERHERO_ID", superhero.id)
+        intent.putExtra(DetailActivity.EXTRA_SUPERHERO_ID, superhero.id)
         startActivity(intent)
     }
 
