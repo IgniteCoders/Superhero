@@ -1,18 +1,15 @@
 package com.example.superhero.activities
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.superhero.R
 import com.example.superhero.adapters.SuperheroAdapter
 import com.example.superhero.data.Superhero
@@ -60,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main_activity, menu)
+        menuInflater.inflate(R.menu.menu_activity_main, menu)
 
         val menuItem = menu?.findItem(R.id.menu_search)!!
         val searchView = menuItem.actionView as SearchView
@@ -80,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchSuperheroes(query: String) {
+        binding.loadingProgressBar.visibility = View.VISIBLE
         val service = RetrofitProvider.getRetrofit()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -87,15 +85,27 @@ class MainActivity : AppCompatActivity() {
                 val result = service.findSuperheroesByName(query)
 
                 CoroutineScope(Dispatchers.Main).launch {
+                    binding.loadingProgressBar.visibility = View.GONE
                     if (result.response == "success") {
+                        binding.emptyView.visibility = View.GONE
+                        binding.recyclerView.visibility = View.VISIBLE
                         superheroList = result.results
                         adapter.updateItems(superheroList)
                     } else {
-                        // TODO: Mostrar mensaje de que no se ha encontrado nada
+                        binding.recyclerView.visibility = View.GONE
+                        binding.emptyView.visibility = View.VISIBLE
+                        binding.noResultsTextView.text = getString(R.string.no_results, query)
                     }
                 }
             } catch (e: Exception) {
                 Log.e("API", e.stackTraceToString())
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.loadingProgressBar.visibility = View.GONE
+                    binding.recyclerView.visibility = View.GONE
+                    binding.emptyView.visibility = View.VISIBLE
+                    binding.noResultsTextView.text = getString(R.string.error)
+                }
             }
         }
     }

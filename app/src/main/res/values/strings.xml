@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Superhero</string>
+
+    <string name="no_results">No results for \"%1$s\"!</string>
+    <string name="error">An unexpected error occurred!</string>
+
+    <string name="menu_biography">Biography</string>
+    <string name="menu_appearance">Appearance</string>
+    <string name="menu_stats">Stats</string>
 </resources>

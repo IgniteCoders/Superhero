@@ -12,10 +12,11 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Action Bar -->
-        <item name="iconTint">@color/secondaryColor</item>
-        <item name="colorSurface">?attr/colorPrimary</item>
-        <item name="colorOnSurface">?attr/colorOnPrimary</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <!-- <item name="colorSurface">?attr/colorPrimary</item>
+        <item name="colorOnSurface">?attr/colorOnPrimary</item> -->
         <!-- Customize your theme here. -->
+        <item name="fontFamily">@font/copilme</item>
     </style>
 
     <style name="Theme.Superhero" parent="Base.Theme.Superhero" />
